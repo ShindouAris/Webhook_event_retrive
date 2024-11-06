@@ -43,7 +43,7 @@ async def send_webhook(data: dict):
         webhook = Webhook.from_url(webhookURL, session=session)
         await webhook.send(**data)
 
-@app.post("endpoint/webhook")
+@app.post("/endpoint/webhook")
 async def recive_ping():
     verify = verify_signature(request)
     if not verify:
