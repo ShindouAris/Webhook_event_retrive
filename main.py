@@ -74,4 +74,4 @@ async def recive_ping():
         return Response(status=204)
 
 
-app.run(port=81, host="0.0.0.0")
+app.run(port=80, host="0.0.0.0")
