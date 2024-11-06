@@ -134,7 +134,7 @@ async def recive_ping():
                 embed.set_thumbnail(url=guildIcon)
             embed.description = f"Tên máy chủ: {guildName}\n" \
                                 f"ID: {guildID}\n" \
-                                f"Người auth vào guild: {data['user'].get('global_name')}\n"
+                                f"Người auth vào guild: {request.json['event'].get('user').get('global_name')}\n"
             await send_webhook({"embed": embed})
         except Exception as e:
             logger.error(e)
