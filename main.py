@@ -6,6 +6,12 @@ from dotenv import load_dotenv
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 from typing import TypedDict
+import logging
+
+logger = logging.getLogger(__name__)
+
+logging.basicConfig(level=logging.DEBUG)
+
 app = Flask(__name__)
 load_dotenv()
 webhookURL = environ.get('WEBHOOK_URL')
@@ -29,6 +35,7 @@ def _from_guild_icon(guild_id: int, icon_hash: str):
 
 def verify_signature(data) -> bool:
     verifyKey = VerifyKey(bytes.fromhex(APPLICATION_PUBLIC_KEY))
+    logger.debug(f"Verifying signature for {data}")
     signature = data.headers["X-Signature-Ed25519"]
     timestamp = data.headers["X-Signature-Timestamp"]
     body = data.data.decode("utf-8")
@@ -48,8 +55,10 @@ async def recive_ping():
     verify = verify_signature(request)
     if not verify:
         return Response('invalid request signature', status=401)
+    logger.info(f"Received webhook request")
 
     if request.json["type"] == 0:
+        logger.info(request.json)
         return Response(status=204)
 
     if request.json["event"]["type"] == "APPLICATION_AUTHORIZED":
