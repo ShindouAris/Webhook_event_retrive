@@ -73,5 +73,9 @@ async def recive_ping():
         await send_webhook({"embed": embed})
         return Response(status=204)
 
+@app.get("/keep_alive")
+def keep_alive():
+    return "Hello World!"
+
 
 app.run(port=80, host="0.0.0.0")
