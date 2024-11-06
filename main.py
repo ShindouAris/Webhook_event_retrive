@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Flask, Response, request
 from disnake import Webhook, Embed
 from aiohttp import ClientSession
@@ -63,17 +65,10 @@ async def recive_ping():
         return Response(status=204)
 
     if request.json["event"]["type"] == "APPLICATION_AUTHORIZED":
-        data = request.json['event']['data']['guild']
         try:
-            guildID = data['id']
-            guildName = data["name"]
-            embed = Embed(title="Đã thêm vào máy chủ mới")
-            if data["icon"] is not None:
-                guildIcon = _from_guild_icon(guildID,data['icon'])['url']
-                embed.set_thumbnail(url=guildIcon)
-            embed.description = f"Tên máy chủ: {guildName}\n" \
-                                f"ID: {guildID}\n" \
-                                f"Người auth vào guild: {request.json['event'].get('user').get('global_name')}\n"
+            embed = Embed(description="__Đã thêm vào máy chủ mới__")
+            # embed.set_image(url="")
+            embed.set_footer(icon_url="https://cdn.discordapp.com/avatars/1119870633468235817/a_95bf7aff063e2205da18293f375e165d.gif?size=1024", text="Kamisato Ayaka")
             await send_webhook({"embed": embed})
         except Exception as e:
             logger.error(e)
