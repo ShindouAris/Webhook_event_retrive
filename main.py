@@ -63,3 +63,6 @@ async def recive_ping():
                             f"ID: {guildID}\n"
         await send_webhook({"embed": embed})
         return Response(status=204)
+
+
+app.run(port=81)
