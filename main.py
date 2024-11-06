@@ -124,16 +124,17 @@ async def recive_ping():
         return Response(status=204)
 
     if request.json["event"]["type"] == "APPLICATION_AUTHORIZED":
-        data = request.json["event"]["data"]['guild']
-        print(request.json)
+        data = request.json['event'].get('data').get('guild')
         try:
             guildID = data['id']
             guildName = data["name"]
-            guildIcon = _from_guild_icon(guildID,data['icon'])['url']
             embed = Embed(title="Đã thêm vào máy chủ mới")
-            embed.set_thumbnail(url=guildIcon)
+            if data["icon"] is not None:
+                guildIcon = _from_guild_icon(guildID,data['icon'])['url']
+                embed.set_thumbnail(url=guildIcon)
             embed.description = f"Tên máy chủ: {guildName}\n" \
-                                f"ID: {guildID}\n"
+                                f"ID: {guildID}\n" \
+                                f"Người auth vào guild: {data['user'].get('global_name')}\n"
             await send_webhook({"embed": embed})
         except Exception as e:
             logger.error(e)
