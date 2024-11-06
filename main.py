@@ -97,7 +97,7 @@ def _from_guild_icon(guild_id: int, icon_hash: str):
 
 def verify_signature(data) -> bool:
     verifyKey = VerifyKey(bytes.fromhex(APPLICATION_PUBLIC_KEY))
-    logger.debug(f"Verifying signature for {data}")
+    logger.debug(f"Verifying signature")
     signature = data.headers["X-Signature-Ed25519"]
     timestamp = data.headers["X-Signature-Timestamp"]
     body = data.data.decode("utf-8")
