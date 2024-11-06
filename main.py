@@ -1,5 +1,5 @@
 from flask import Flask, Response, request
-from disnake import Webhook, Embed
+from disnake import Webhook, Embed, Guild
 from aiohttp import ClientSession
 from os import environ
 from dotenv import load_dotenv
@@ -125,15 +125,20 @@ async def recive_ping():
 
     if request.json["event"]["type"] == "APPLICATION_AUTHORIZED":
         data = request.json["event"]["data"]['guild']
-        guildID = data['id']
-        guildName = data["name"]
-        guildIcon = _from_guild_icon(guildID,data['icon'])['url']
-        embed = Embed(title="Đã thêm vào máy chủ mới")
-        embed.set_thumbnail(url=guildIcon)
-        embed.description = f"Tên máy chủ: {guildName}\n" \
-                            f"ID: {guildID}\n"
-        await send_webhook({"embed": embed})
-        return Response(status=204)
+        print(request.json)
+        try:
+            guildID = data['id']
+            guildName = data["name"]
+            guildIcon = _from_guild_icon(guildID,data['icon'])['url']
+            embed = Embed(title="Đã thêm vào máy chủ mới")
+            embed.set_thumbnail(url=guildIcon)
+            embed.description = f"Tên máy chủ: {guildName}\n" \
+                                f"ID: {guildID}\n"
+            await send_webhook({"embed": embed})
+        except Exception as e:
+            logger.error(e)
+        finally:
+            return Response(status=204)
 
 @app.get("/keep_alive")
 def keep_alive():
