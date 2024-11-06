@@ -66,8 +66,8 @@ async def recive_ping():
 
     if request.json["event"]["type"] == "APPLICATION_AUTHORIZED":
         try:
-            embed = Embed(description="__Đã thêm vào máy chủ mới__")
-            # embed.set_image(url="")
+            embed = Embed(description="### __Đã được thêm vào máy chủ mới !__")
+            embed.set_image(url="https://i.ibb.co/7SgZSDj/miku.gif")
             embed.set_footer(icon_url="https://cdn.discordapp.com/avatars/1119870633468235817/a_95bf7aff063e2205da18293f375e165d.gif?size=1024", text="Kamisato Ayaka")
             await send_webhook({"embed": embed})
         except Exception as e:
