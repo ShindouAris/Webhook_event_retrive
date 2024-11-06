@@ -1,5 +1,5 @@
 from flask import Flask, Response, request
-from disnake import Webhook, Embed, Guild
+from disnake import Webhook, Embed
 from aiohttp import ClientSession
 from os import environ
 from dotenv import load_dotenv
@@ -21,67 +21,6 @@ class clsFormat(TypedDict):
     url: str
     key: str
     animated: bool
-
-
-jsondata = {
-    "version": 1,
-    "application_id": "1234560123453231555",
-    "type": 1,
-    "event": {
-        "type": "APPLICATION_AUTHORIZED",
-        "timestamp": "2024-10-18T14:42:53.064834",
-        "data": {
-            "integration_type": 1,
-            "scopes": [
-                "applications.commands"
-            ],
-            "guild": {
-                "id": "197038439483310086",
-                "name": "Discord Testers",
-                "icon": "f64c482b807da4f539cff778d174971c",
-                "description": "The official place to report Discord Bugs!",
-                "splash": None,
-                "discovery_splash": None,
-                "features": [
-                    "ANIMATED_ICON",
-                    "VERIFIED",
-                    "NEWS",
-                    "VANITY_URL",
-                    "DISCOVERABLE",
-                    "MORE_EMOJI",
-                    "INVITE_SPLASH",
-                    "BANNER",
-                    "COMMUNITY"
-                ],
-                "emojis": [],
-                "banner": "9b6439a7de04f1d26af92f84ac9e1e4a",
-                "owner_id": "73193882359173120",
-                "application_id": None,
-                "region": None,
-                "afk_channel_id": None,
-                "afk_timeout": 300,
-                "system_channel_id": None,
-                "widget_enabled": True,
-                "widget_channel_id": None,
-                "verification_level": 3,
-                "roles": [],
-                "default_message_notifications": 1,
-                "mfa_level": 1,
-                "explicit_content_filter": 2,
-                "max_presences": 40000,
-                "max_members": 250000,
-                "vanity_url_code": "discord-testers",
-                "premium_tier": 3,
-                "premium_subscription_count": 33,
-                "system_channel_flags": 0,
-                "preferred_locale": "en-US",
-                "rules_channel_id": "441688182833020939",
-                "public_updates_channel_id": "281283303326089216",
-                "safety_alerts_channel_id": "281283303326089216"
-            }
-    }
-}
-}
 
 
 BASE = "https://cdn.discordapp.com"
@@ -124,7 +63,7 @@ async def recive_ping():
         return Response(status=204)
 
     if request.json["event"]["type"] == "APPLICATION_AUTHORIZED":
-        data = request.json['event'].get('data').get('guild')
+        data = request.json['event']['data']['guild']
         try:
             guildID = data['id']
             guildName = data["name"]
@@ -144,6 +83,3 @@ async def recive_ping():
 @app.get("/keep_alive")
 def keep_alive():
     return "Hello World!"
-
-
-app.run(port=80, host="0.0.0.0")
