@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from flask import Flask, Response, request, render_template
 from disnake import Webhook, Embed
 from aiohttp import ClientSession
@@ -7,7 +5,6 @@ from os import environ
 from dotenv import load_dotenv
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
-from typing import TypedDict
 import logging
 
 logger = logging.getLogger(__name__)
@@ -68,9 +65,9 @@ async def recive_ping():
             embed = Embed()
             try:
                 embed.description = "### __Đã được thêm vào máy chủ mới !__\n" \
-                                    f"```{request.json["event"]['data']['guild']['name']}```" \
-                                    f"ID: {request.json["event"]['data']['guild']['id']}\n" \
-                                    f"Người dùng phê duyệt ứng dụng này: ```{request.json["event"]['data']['user']['global_name']} - {request.json["event"]['data']['user']['id']}```"
+                                    f"```{request.json['event']['data']['guild']['name']}```" \
+                                    f"ID: {request.json['event']['data']['guild']['id']}\n" \
+                                    f"Người dùng phê duyệt ứng dụng này: ```{request.json['event']['data']['user']['global_name']} - {request.json['event']['data']['user']['id']}```"
                 embed.set_image(url="https://i.ibb.co/7SgZSDj/miku.gif")
                 embed.set_footer(icon_url="https://cdn.discordapp.com/avatars/1119870633468235817/a_95bf7aff063e2205da18293f375e165d.gif?size=1024", text="Kamisato Ayaka")
                 embed.set_thumbnail(url=from_guild_icon(request.json["event"]['data']['guild']['id'], request.json["event"]['data']['guild']['icon']))
@@ -104,6 +101,11 @@ def handle_error(e):
 def meth_notallowed(e):
     app.template_folder = "htmls"
     return render_template("methodnotallowed.html"), 405
+
+@app.errorhandler(500)
+def servererror(e):
+    app.template_folder = "htmls"
+    return render_template("servererror.html"), 500
 
 if __name__ == "__main__":
     app.run(port=80, host="0.0.0.0")
